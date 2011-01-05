@@ -23,5 +23,7 @@ library
   exposed-modules:
     Control.Comonad.Store
     Control.Comonad.Store.Class
+    Control.Comonad.Env
+    Control.Comonad.Env.Class
 
   ghc-options:      -Wall 

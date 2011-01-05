@@ -17,10 +17,11 @@ module Control.Comonad.Env.Class
 import Control.Comonad
 import Control.Comonad.Trans.Class
 import qualified Control.Comonad.Trans.Env as T
-import qualified Control.Comonad.Trans.Pointer as P
+-- import qualified Control.Comonad.Trans.Pointer as P
+import Control.Comonad.Trans.Store
 import Control.Comonad.Trans.Discont
 import Control.Comonad.Trans.Identity 
-import Data.Ix
+-- import Data.Ix
 
 class Comonad w => ComonadEnv e w | w -> e where
   ask :: w a -> e
@@ -35,16 +36,16 @@ instance Comonad w => ComonadEnv e (T.EnvT e w) where
 instance ComonadEnv e ((,)e) where
   ask = fst
 
-lowerAsk :: (ComonadEnv e w, ComonadTrans t) :: t w a -> e
+lowerAsk :: (ComonadEnv e w, ComonadTrans t) => t w a -> e
 lowerAsk = ask . lower
 {-# INLINE lowerAsk #-}
 
 -- All of these require UndecidableInstances because they do not satisfy the coverage condition
 
-instance (ComonadEnv e w, Ix i) => ComonadEnv e (PointerT i w) where
-  ask = lowerAsk
+-- instance (ComonadEnv e w, Ix i) => ComonadEnv e (PointerT i w) where
+--   ask = lowerAsk
 
-instance ComonadEnv e w => ComonadEnv e (ContextT t w) where
+instance ComonadEnv e w => ComonadEnv e (StoreT t w) where
   ask = lowerAsk
 
 instance ComonadEnv e w => ComonadEnv e (DiscontT t w) where
