@@ -7,6 +7,13 @@
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
+--
+-- The Env comonad (aka the Coreader, Environment, or Product comonad)
+-- 
+-- A co-Kleisli arrow in the Env comonad is isomorphic to a Kleisli arrow
+-- in the reader monad.
+--
+-- (a -> e -> m) ~ (a, e) -> m ~ Env e a -> m
 ----------------------------------------------------------------------------
 module Control.Comonad.Env ( 
   -- * ComonadEnv class
