@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Control.Comonad.Context
+-- Module      :  Control.Comonad.Store
 -- Copyright   :  (C) 2008-2011 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
@@ -8,25 +8,24 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Context
-  ( 
-  -- * ComonadContext class
-    ComonadContext(..)
+module Control.Comonad.Store ( 
+  -- * ComonadStore class
+    ComonadStore(..)
   , gets
   , experiment
-  -- * The Context comonad
-  , Context
-  , context
-  , runContext
-  -- * The ContextT comonad transformer
-  , ContextT(..)
-  , runContextT,
+  -- * The Store comonad
+  , Store
+  , store
+  , runStore
+  -- * The StoreT comonad transformer
+  , StoreT(..)
+  , runStoreT
   -- * Re-exported modules
-  module Control.Comonad,
-  module Control.Comonad.Trans.Class
+  , module Control.Comonad
+  , module Control.Comonad.Trans.Class
   ) where
 
 import Control.Comonad
-import Control.Comonad.Context.Class (ComonadContext(..), gets, experiment)
+import Control.Comonad.Store.Class (ComonadStore(..), gets, experiment)
 import Control.Comonad.Trans.Class
-import Control.Comonad.Trans.Context (Context, context, runContext, ContextT(..), runContextT)
+import Control.Comonad.Trans.Store (Store, store, runStore, StoreT(..), runStoreT)

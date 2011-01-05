@@ -21,7 +21,7 @@ library
     comonad-transformers >= 0.1 && < 0.2
 
   exposed-modules:
-    Control.Comonad.Context
-    Control.Comonad.Context.Class
+    Control.Comonad.Store
+    Control.Comonad.Store.Class
 
   ghc-options:      -Wall 
