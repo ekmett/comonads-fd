@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Control.Comonad.Store
+-- Module      :  Control.Comonad.Identity
 -- Copyright   :  (C) 2008-2011 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
@@ -8,8 +8,12 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Store ( 
-  module Control.Comonad.Store.Lazy
+module Control.Comonad.Identity ( 
+    module Control.Comonad
+  , module Data.Functor.Identity
+  , module Control.Comonad.Trans.Identity
   ) where
 
-import Control.Comonad.Store.Lazy
+import Control.Comonad
+import Data.Functor.Identity
+import Control.Comonad.Trans.Identity
