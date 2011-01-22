@@ -1,24 +1,28 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       0.5.0
+version:       0.7.0
 license:       BSD3
-cabal-version: >= 1.2
+cabal-version: >= 1.6
 license-file:  LICENSE
 author:        Edward A. Kmett
 maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     experimental
-homepage:      http://comonad.com/reader/
+homepage:      http://github.com/ekmett/comonads-fd/
 copyright:     Copyright (C) 2008-2011 Edward A. Kmett
 synopsis:      Comonad transformers using functional dependencies.
 description:   Comonad transformers using functional dependencies.
 build-type:    Simple
 
+source-repository head
+  type: git
+  location: git://github.com/ekmett/comonads-fd.git
+
 library
   build-depends: 
     base >= 4 && < 4.4,
     transformers >= 0.2 && < 0.3,
-    comonad >= 0.5 && < 0.6,
-    comonad-transformers >= 0.5 && < 0.6
+    comonad >= 0.7 && < 0.8,
+    comonad-transformers >= 0.7 && < 0.8
 
   exposed-modules:
     Control.Comonad.Env
