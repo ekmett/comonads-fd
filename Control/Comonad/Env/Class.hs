@@ -16,11 +16,17 @@ module Control.Comonad.Env.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
-import qualified Control.Comonad.Trans.Env as T
--- import qualified Control.Comonad.Trans.Pointer as P
-import Control.Comonad.Trans.Store
-import Control.Comonad.Trans.Discont
+import qualified Control.Comonad.Trans.Env.Lazy as Lazy
+import qualified Control.Comonad.Trans.Store.Lazy as Lazy
+import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
+import qualified Control.Comonad.Trans.Env.Strict as Strict
+import qualified Control.Comonad.Trans.Store.Strict as Strict
+import qualified Control.Comonad.Trans.Discont.Strict as Strict
+import Control.Comonad.Trans.Traced
+import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
+import Data.Monoid
+import Data.Semigroup
 -- import Data.Ix
 
 class Comonad w => ComonadEnv e w | w -> e where
@@ -30,8 +36,11 @@ asks :: ComonadEnv e w => (e -> e') -> w a -> e'
 asks f wa = f (ask wa)
 {-# INLINE asks #-}
 
-instance Comonad w => ComonadEnv e (T.EnvT e w) where
-  ask = T.ask
+instance Comonad w => ComonadEnv e (Lazy.EnvT e w) where
+  ask = Lazy.ask
+
+instance Comonad w => ComonadEnv e (Strict.EnvT e w) where
+  ask = Strict.ask
 
 instance ComonadEnv e ((,)e) where
   ask = fst
@@ -45,11 +54,23 @@ lowerAsk = ask . lower
 -- instance (ComonadEnv e w, Ix i) => ComonadEnv e (PointerT i w) where
 --   ask = lowerAsk
 
-instance ComonadEnv e w => ComonadEnv e (StoreT t w) where
+instance ComonadEnv e w => ComonadEnv e (Strict.StoreT t w) where
   ask = lowerAsk
 
-instance ComonadEnv e w => ComonadEnv e (DiscontT t w) where
+instance ComonadEnv e w => ComonadEnv e (Strict.DiscontT t w) where
+  ask = lowerAsk
+
+instance ComonadEnv e w => ComonadEnv e (Lazy.StoreT t w) where
+  ask = lowerAsk
+
+instance ComonadEnv e w => ComonadEnv e (Lazy.DiscontT t w) where
   ask = lowerAsk
 
 instance ComonadEnv e w => ComonadEnv e (IdentityT w) where
+  ask = lowerAsk
+
+instance (ComonadEnv e w, Semigroup m, Monoid m) => ComonadEnv e (TracedT m w) where
+  ask = lowerAsk
+
+instance (ComonadEnv e w, Functor f) => ComonadEnv e (StreamT f w) where
   ask = lowerAsk
