@@ -22,7 +22,10 @@ import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
 import qualified Control.Comonad.Trans.Env.Strict as Strict
 import qualified Control.Comonad.Trans.Store.Strict as Strict
 import qualified Control.Comonad.Trans.Discont.Strict as Strict
-import Control.Comonad.Trans.Traced
+import qualified Control.Comonad.Trans.Traced as Simple
+import qualified Control.Comonad.Trans.Traced.Memo as Memo
+import qualified Control.Comonad.Trans.Store.Memo as Memo
+import qualified Control.Comonad.Trans.Discont.Memo as Memo
 import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
@@ -66,10 +69,19 @@ instance ComonadEnv e w => ComonadEnv e (Lazy.StoreT t w) where
 instance ComonadEnv e w => ComonadEnv e (Lazy.DiscontT t w) where
   ask = lowerAsk
 
+instance ComonadEnv e w => ComonadEnv e (Memo.StoreT t w) where
+  ask = lowerAsk
+
+instance ComonadEnv e w => ComonadEnv e (Memo.DiscontT t w) where
+  ask = lowerAsk
+
 instance ComonadEnv e w => ComonadEnv e (IdentityT w) where
   ask = lowerAsk
 
-instance (ComonadEnv e w, Semigroup m, Monoid m) => ComonadEnv e (TracedT m w) where
+instance (ComonadEnv e w, Semigroup m, Monoid m) => ComonadEnv e (Simple.TracedT m w) where
+  ask = lowerAsk
+
+instance (ComonadEnv e w, Monoid m) => ComonadEnv e (Memo.TracedT m w) where
   ask = lowerAsk
 
 instance (ComonadEnv e w, Functor f) => ComonadEnv e (StreamT f w) where

@@ -17,19 +17,23 @@ module Control.Comonad.Store.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
-import qualified Control.Comonad.Trans.Store.Strict as Strict
-import qualified Control.Comonad.Trans.Store.Lazy as Lazy
-import qualified Control.Comonad.Trans.Discont.Strict as Strict
-import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
 import qualified Control.Comonad.Trans.Env.Strict as Strict
+import qualified Control.Comonad.Trans.Store.Strict as Strict
+import qualified Control.Comonad.Trans.Discont.Strict as Strict
+
 import qualified Control.Comonad.Trans.Env.Lazy as Lazy
+import qualified Control.Comonad.Trans.Store.Lazy as Lazy
+import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
+
+import qualified Control.Comonad.Trans.Traced as Simple
+
+import qualified Control.Comonad.Trans.Traced.Memo as Memo
+import qualified Control.Comonad.Trans.Store.Memo as Memo
+import qualified Control.Comonad.Trans.Discont.Memo as Memo
 import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
-import Control.Comonad.Trans.Traced
 import Data.Monoid
 import Data.Semigroup
--- import qualified Control.Comonad.Trans.Pointer as P
--- import Data.Ix
 
 class Comonad w => ComonadStore s w | w -> s where
   get :: w a -> s
@@ -56,6 +60,11 @@ instance Comonad w => ComonadStore s (Lazy.StoreT s w) where
   put = Lazy.put
   modify = Lazy.modify
 
+instance Comonad w => ComonadStore s (Memo.StoreT s w) where
+  get = Memo.get
+  put = Memo.put
+  modify = Memo.modify
+
 -- All of these require UndecidableInstances because they do not satisfy the coverage condition
 
 lowerGet :: (ComonadTrans t, ComonadStore s w) => t w a -> s
@@ -71,6 +80,11 @@ lowerModify f = modify f . lower
 {-# INLINE lowerModify #-}
 
 instance ComonadStore s w => ComonadStore s (Lazy.DiscontT k w) where
+  get = lowerGet
+  put = lowerPut
+  modify = lowerModify
+
+instance ComonadStore s w => ComonadStore s (Memo.DiscontT k w) where
   get = lowerGet
   put = lowerPut
   modify = lowerModify
@@ -95,7 +109,12 @@ instance ComonadStore s w => ComonadStore s (Strict.EnvT e w) where
   put = lowerPut
   modify = lowerModify
 
-instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (TracedT m w) where
+instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (Simple.TracedT m w) where
+  get = lowerGet
+  put = lowerPut
+  modify = lowerModify
+
+instance (ComonadStore s w, Monoid m) => ComonadStore s (Memo.TracedT m w) where
   get = lowerGet
   put = lowerPut
   modify = lowerModify

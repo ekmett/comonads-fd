@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       1.0.0
+version:       1.2.1
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -9,8 +9,8 @@ maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     experimental
 homepage:      http://github.com/ekmett/comonads-fd/
 copyright:     Copyright (C) 2008-2011 Edward A. Kmett
-synopsis:      Comonad transformers using functional dependencies.
-description:   Comonad transformers using functional dependencies.
+synopsis:      Comonad transformers using functional dependencies
+description:   Comonad transformers using functional dependencies
 build-type:    Simple
 
 source-repository head
@@ -23,7 +23,7 @@ library
     transformers >= 0.2 && < 0.3,
     semigroups >= 0.3.4 && < 0.4,
     comonad >= 1.0 && < 1.1,
-    comonad-transformers >= 1.0 && < 1.1
+    comonad-transformers >= 1.2.1 && < 1.3
 
   exposed-modules:
     Control.Comonad.Env
@@ -35,7 +35,9 @@ library
     Control.Comonad.Store.Class
     Control.Comonad.Store.Strict
     Control.Comonad.Store.Lazy
+    Control.Comonad.Store.Memo
     Control.Comonad.Traced
     Control.Comonad.Traced.Class
+    Control.Comonad.Traced.Memo
 
   ghc-options:      -Wall 
