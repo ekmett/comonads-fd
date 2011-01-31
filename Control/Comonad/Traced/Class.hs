@@ -77,5 +77,5 @@ instance ComonadTraced m w => ComonadTraced m (Memo.DiscontT k w) where
 instance ComonadTraced m w => ComonadTraced m (Memo.StoreT s w) where
   trace = lowerTrace
 
-instance ComonadTraced m w => ComonadTraced m (StreamT s w) where
+instance (Functor s, ComonadTraced m w) => ComonadTraced m (StreamT s w) where
   trace = lowerTrace
