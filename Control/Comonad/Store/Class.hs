@@ -13,6 +13,7 @@ module Control.Comonad.Store.Class
   ( ComonadStore(..)
   , gets
   , experiment
+  , lowerGet
   ) where
 
 import Control.Comonad
@@ -30,16 +31,15 @@ import qualified Control.Comonad.Trans.Traced as Simple
 import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Stream
+-- import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
 import Data.Semigroup
 
 class Comonad w => ComonadStore s w | w -> s where
   get :: w a -> s
-  put :: s -> w a -> a
-  modify :: (s -> s) -> w a -> a
-
+  put :: s -> w a -> w a
+  modify :: (s -> s) -> w a -> w a
   modify f wa = put (f (get wa)) wa
 
 gets :: ComonadStore s w => (s -> t) -> w a -> t
@@ -47,7 +47,7 @@ gets f wa = f (get wa)
 {-# INLINE gets #-}
 
 experiment :: (ComonadStore s w, Functor f) => f (s -> s) -> w a -> f a
-experiment ff wa = fmap (`modify` wa) ff
+experiment ff wa = fmap (\f -> extract (modify f wa)) ff
 {-# INLINE experiment #-}
 
 instance Comonad w => ComonadStore s (Strict.StoreT s w) where
@@ -71,55 +71,35 @@ lowerGet :: (ComonadTrans t, ComonadStore s w) => t w a -> s
 lowerGet = get . lower
 {-# INLINE lowerGet #-}
 
-lowerPut :: (ComonadTrans t, ComonadStore s w) => s -> t w a -> a
-lowerPut s = put s . lower
-{-# INLINE lowerPut #-}
-
-lowerModify :: (ComonadTrans t, ComonadStore s w) => (s -> s) -> t w a -> a
-lowerModify f = modify f . lower
-{-# INLINE lowerModify #-}
-
 instance ComonadStore s w => ComonadStore s (Lazy.DiscontT k w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s ~(Lazy.DiscontT f wa) = Lazy.DiscontT f (put s wa)
 
 instance ComonadStore s w => ComonadStore s (Memo.DiscontT k w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s w = Memo.discontT f (put s wa)
+    where (f, wa) = Memo.runDiscontT w
 
 instance ComonadStore s w => ComonadStore s (Strict.DiscontT k w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s (Strict.DiscontT f wa) = Strict.DiscontT f (put s wa)
 
 instance ComonadStore s w => ComonadStore s (IdentityT w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s = IdentityT . put s . runIdentityT
 
 instance ComonadStore s w => ComonadStore s (Lazy.EnvT e w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s ~(Lazy.EnvT e wa) = Lazy.EnvT e (put s wa)
 
 instance ComonadStore s w => ComonadStore s (Strict.EnvT e w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s (Strict.EnvT e wa) = Strict.EnvT e (put s wa)
 
 instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (Simple.TracedT m w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s (Simple.TracedT wma) = Simple.TracedT (put s wma)
 
 instance (ComonadStore s w, Monoid m) => ComonadStore s (Memo.TracedT m w) where
   get = lowerGet
-  put = lowerPut
-  modify = lowerModify
-
-instance (ComonadStore s w, Functor f) => ComonadStore s (StreamT f w) where
-  get = lowerGet
-  put = lowerPut
-  modify = lowerModify
+  put s = Memo.tracedT . put s . Memo.runTracedT
