@@ -11,8 +11,6 @@
 module Control.Comonad.Store.Lazy ( 
   -- * ComonadStore class
     ComonadStore(..)
-  , gets
-  , experiment
   -- * The Store comonad
   , Store
   , store
@@ -26,6 +24,6 @@ module Control.Comonad.Store.Lazy (
   ) where
 
 import Control.Comonad
-import Control.Comonad.Store.Class (ComonadStore(..), gets, experiment)
+import Control.Comonad.Store.Class (ComonadStore(..))
 import Control.Comonad.Trans.Class
 import Control.Comonad.Trans.Store.Lazy (Store, store, runStore, StoreT(..), runStoreT)

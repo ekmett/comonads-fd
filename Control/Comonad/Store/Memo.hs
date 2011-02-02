@@ -11,8 +11,6 @@
 module Control.Comonad.Store.Memo ( 
   -- * ComonadStore class
     ComonadStore(..)
-  , gets
-  , experiment
   -- * The Store comonad
   , Store
   , store
@@ -27,6 +25,6 @@ module Control.Comonad.Store.Memo (
   ) where
 
 import Control.Comonad
-import Control.Comonad.Store.Class (ComonadStore(..), gets, experiment)
+import Control.Comonad.Store.Class (ComonadStore(..))
 import Control.Comonad.Trans.Class
 import Control.Comonad.Trans.Store.Memo (Store, store, runStore, StoreT, storeT, runStoreT)

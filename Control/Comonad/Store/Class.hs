@@ -11,9 +11,8 @@
 ----------------------------------------------------------------------------
 module Control.Comonad.Store.Class 
   ( ComonadStore(..)
-  , gets
-  , experiment
-  , lowerGet
+  , lowerPos
+  , lowerPeek
   ) where
 
 import Control.Comonad
@@ -37,69 +36,77 @@ import Data.Monoid
 import Data.Semigroup
 
 class Comonad w => ComonadStore s w | w -> s where
-  get :: w a -> s
-  put :: s -> w a -> w a
-  modify :: (s -> s) -> w a -> w a
-  modify f wa = put (f (get wa)) wa
+  pos :: w a -> s
+  peek :: s -> w a -> a
 
-gets :: ComonadStore s w => (s -> t) -> w a -> t
-gets f wa = f (get wa)
-{-# INLINE gets #-}
-
-experiment :: (ComonadStore s w, Functor f) => f (s -> s) -> w a -> f a
-experiment ff wa = fmap (\f -> extract (modify f wa)) ff
-{-# INLINE experiment #-}
+  peeks :: (s -> s) -> w a -> a
+  peeks f w = peek (f (pos w)) w
+  
+  seek :: s -> w a -> w a
+  seek s = peek s . duplicate
+    
+  seeks :: (s -> s) -> w a -> w a
+  seeks f = peeks f . duplicate
 
 instance Comonad w => ComonadStore s (Strict.StoreT s w) where
-  get = Strict.get
-  put = Strict.put
-  modify = Strict.modify
+  pos = Strict.pos
+  peek = Strict.peek
+  peeks = Strict.peeks
+  seek = Strict.seek
+  seeks = Strict.seeks
 
 instance Comonad w => ComonadStore s (Lazy.StoreT s w) where
-  get = Lazy.get
-  put = Lazy.put
-  modify = Lazy.modify
+  pos = Lazy.pos
+  peek = Lazy.peek
+  peeks = Lazy.peeks
+  seek = Lazy.seek
+  seeks = Lazy.seeks
 
 instance Comonad w => ComonadStore s (Memo.StoreT s w) where
-  get = Memo.get
-  put = Memo.put
-  modify = Memo.modify
+  pos = Memo.pos
+  peek = Memo.peek
+  peeks = Memo.peeks
+  seek = Memo.seek
+  seeks = Memo.seeks
 
 -- All of these require UndecidableInstances because they do not satisfy the coverage condition
 
-lowerGet :: (ComonadTrans t, ComonadStore s w) => t w a -> s
-lowerGet = get . lower
-{-# INLINE lowerGet #-}
+lowerPos :: (ComonadTrans t, ComonadStore s w) => t w a -> s
+lowerPos = pos . lower
+{-# INLINE lowerPos #-}
+
+lowerPeek :: (ComonadTrans t, ComonadStore s w) => s -> t w a -> a
+lowerPeek s = peek s . lower
+{-# INLINE lowerPeek #-}
 
 instance ComonadStore s w => ComonadStore s (Lazy.DiscontT k w) where
-  get = lowerGet
-  put s ~(Lazy.DiscontT f wa) = Lazy.DiscontT f (put s wa)
+  pos = lowerPos
+  peek = lowerPeek
 
 instance ComonadStore s w => ComonadStore s (Memo.DiscontT k w) where
-  get = lowerGet
-  put s w = Memo.discontT f (put s wa)
-    where (f, wa) = Memo.runDiscontT w
+  pos = lowerPos
+  peek = lowerPeek
 
 instance ComonadStore s w => ComonadStore s (Strict.DiscontT k w) where
-  get = lowerGet
-  put s (Strict.DiscontT f wa) = Strict.DiscontT f (put s wa)
+  pos = lowerPos
+  peek = lowerPeek
 
 instance ComonadStore s w => ComonadStore s (IdentityT w) where
-  get = lowerGet
-  put s = IdentityT . put s . runIdentityT
+  pos = lowerPos
+  peek = lowerPeek
 
 instance ComonadStore s w => ComonadStore s (Lazy.EnvT e w) where
-  get = lowerGet
-  put s ~(Lazy.EnvT e wa) = Lazy.EnvT e (put s wa)
+  pos = lowerPos
+  peek = lowerPeek
 
 instance ComonadStore s w => ComonadStore s (Strict.EnvT e w) where
-  get = lowerGet
-  put s (Strict.EnvT e wa) = Strict.EnvT e (put s wa)
+  pos = lowerPos
+  peek = lowerPeek
 
 instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (Simple.TracedT m w) where
-  get = lowerGet
-  put s (Simple.TracedT wma) = Simple.TracedT (put s wma)
+  pos = lowerPos
+  peek = lowerPeek
 
 instance (ComonadStore s w, Monoid m) => ComonadStore s (Memo.TracedT m w) where
-  get = lowerGet
-  put s = Memo.tracedT . put s . Memo.runTracedT
+  pos = lowerPos
+  peek = lowerPeek
