@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       1.6.1
+version:       1.6.3
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -24,7 +24,7 @@ library
     mtl >= 2.0.1.0 && <= 2.1,
     semigroups >= 0.5 && < 0.6,
     comonad >= 1.1 && < 1.2,
-    comonad-transformers >= 1.6.1 && < 1.7
+    comonad-transformers >= 1.6.3 && < 1.7
 
   exposed-modules:
     Control.Comonad.Discont
