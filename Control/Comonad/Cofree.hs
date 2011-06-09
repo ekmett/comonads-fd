@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Control.Comonad.Stream
+-- Module      :  Control.Comonad.Cofree
 -- Copyright   :  (C) 2008-2011 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
@@ -8,8 +8,13 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Stream ( 
-    module Control.Comonad.Trans.Stream
+module Control.Comonad.Cofree 
+  ( ComonadCofree(..)
+  , Cofree(..)
+  , coiter
+  , unfold
+  , section
   ) where
 
-import Control.Comonad.Trans.Stream
+import Control.Comonad.Cofree.Class
+import Control.Comonad.Trans.Cofree

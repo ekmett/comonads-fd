@@ -16,6 +16,7 @@ module Control.Comonad.Traced.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
+import Control.Comonad.Trans.Cofree
 import qualified Control.Comonad.Trans.Env.Strict as Strict
 import qualified Control.Comonad.Trans.Store.Strict as Strict
 import qualified Control.Comonad.Trans.Discont.Strict as Strict
@@ -26,7 +27,6 @@ import qualified Control.Comonad.Trans.Traced as Simple
 import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
 import Data.Semigroup
@@ -77,5 +77,5 @@ instance ComonadTraced m w => ComonadTraced m (Memo.DiscontT k w) where
 instance ComonadTraced m w => ComonadTraced m (Memo.StoreT s w) where
   trace = lowerTrace
 
-instance (Functor s, ComonadTraced m w) => ComonadTraced m (StreamT s w) where
+instance ComonadTraced m w => ComonadTraced m (Cofree w) where
   trace = lowerTrace

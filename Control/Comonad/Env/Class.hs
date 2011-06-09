@@ -16,6 +16,7 @@ module Control.Comonad.Env.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
+import Control.Comonad.Trans.Cofree
 import qualified Control.Comonad.Trans.Env.Lazy as Lazy
 import qualified Control.Comonad.Trans.Store.Lazy as Lazy
 import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
@@ -26,7 +27,6 @@ import qualified Control.Comonad.Trans.Traced as Simple
 import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Stream
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
 import Data.Semigroup
@@ -84,5 +84,5 @@ instance (ComonadEnv e w, Semigroup m, Monoid m) => ComonadEnv e (Simple.TracedT
 instance (ComonadEnv e w, Monoid m) => ComonadEnv e (Memo.TracedT m w) where
   ask = lowerAsk
 
-instance (ComonadEnv e w, Functor f) => ComonadEnv e (StreamT f w) where
-  ask = lowerAsk
+instance ComonadEnv e w => ComonadEnv e (Cofree w) where
+  ask = lowerAsk 

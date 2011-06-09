@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       1.6.3
+version:       1.7
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -24,9 +24,11 @@ library
     mtl >= 2.0.1.0 && <= 2.1,
     semigroups >= 0.5 && < 0.6,
     comonad >= 1.1 && < 1.2,
-    comonad-transformers >= 1.6.3 && < 1.7
+    comonad-transformers >= 1.7 && < 1.8
 
   exposed-modules:
+    Control.Comonad.Cofree
+    Control.Comonad.Cofree.Class
     Control.Comonad.Discont
     Control.Comonad.Discont.Class
     Control.Comonad.Discont.Lazy
@@ -42,10 +44,13 @@ library
     Control.Comonad.Store.Strict
     Control.Comonad.Store.Lazy
     Control.Comonad.Store.Memo
-    Control.Comonad.Stream
     Control.Comonad.Traced
     Control.Comonad.Traced.Class
     Control.Comonad.Traced.Memo
+
+    Control.Monad.Free
+    Control.Monad.Free.Class
+
     Data.Lens
 
   ghc-options:      -Wall 
