@@ -16,7 +16,6 @@ module Control.Comonad.Traced.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
-import Control.Comonad.Trans.Cofree
 import qualified Control.Comonad.Trans.Env.Strict as Strict
 import qualified Control.Comonad.Trans.Store.Strict as Strict
 import qualified Control.Comonad.Trans.Discont.Strict as Strict
@@ -77,5 +76,3 @@ instance ComonadTraced m w => ComonadTraced m (Memo.DiscontT k w) where
 instance ComonadTraced m w => ComonadTraced m (Memo.StoreT s w) where
   trace = lowerTrace
 
-instance ComonadTraced m w => ComonadTraced m (Cofree w) where
-  trace = lowerTrace

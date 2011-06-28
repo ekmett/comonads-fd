@@ -30,7 +30,6 @@ import qualified Control.Comonad.Trans.Traced as Simple
 import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Cofree
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
 import Data.Semigroup
@@ -47,10 +46,6 @@ class Comonad w => ComonadStore s w | w -> s where
     
   seeks :: (s -> s) -> w a -> w a
   seeks f = peeks f . duplicate
-
-instance ComonadStore s w => ComonadStore s (Cofree w) where
-  pos (_ :< as) = pos as
-  peek s (_ :< as) = extract (peek s as)
 
 instance Comonad w => ComonadStore s (Strict.StoreT s w) where
   pos = Strict.pos
