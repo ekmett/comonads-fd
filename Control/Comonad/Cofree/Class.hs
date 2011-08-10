@@ -31,9 +31,13 @@ import qualified Control.Comonad.Trans.Discont.Memo as Memo
 import Control.Comonad.Trans.Identity 
 import Data.Monoid
 import Data.Semigroup
+import Data.Tree
 
 class (Functor f, Comonad w) => ComonadCofree f w | w -> f where
   unwrap :: w a -> f (w a)
+
+instance ComonadCofree [] Tree where
+  unwrap (Node _ xs) = xs
 
 instance Functor f => ComonadCofree f (Cofree f) where
   unwrap = Cofree.unwrap
