@@ -31,7 +31,6 @@ import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
 import Control.Comonad.Trans.Identity 
-import Data.Monoid
 import Data.Semigroup
 
 class Comonad w => ComonadStore s w | w -> s where
