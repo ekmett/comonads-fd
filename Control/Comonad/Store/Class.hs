@@ -9,7 +9,7 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Store.Class 
+module Control.Comonad.Store.Class
   ( ComonadStore(..)
   , lowerPos
   , lowerPeek
@@ -17,20 +17,10 @@ module Control.Comonad.Store.Class
 
 import Control.Comonad
 import Control.Comonad.Trans.Class
-import qualified Control.Comonad.Trans.Env.Strict as Strict
-import qualified Control.Comonad.Trans.Store.Strict as Strict
-import qualified Control.Comonad.Trans.Discont.Strict as Strict
-
-import qualified Control.Comonad.Trans.Env.Lazy as Lazy
-import qualified Control.Comonad.Trans.Store.Lazy as Lazy
-import qualified Control.Comonad.Trans.Discont.Lazy as Lazy
-
-import qualified Control.Comonad.Trans.Traced as Simple
-
-import qualified Control.Comonad.Trans.Traced.Memo as Memo
-import qualified Control.Comonad.Trans.Store.Memo as Memo
-import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Identity 
+import Control.Comonad.Trans.Env
+import qualified Control.Comonad.Trans.Store as Store
+import Control.Comonad.Trans.Traced
+import Control.Comonad.Trans.Identity
 import Data.Semigroup
 
 class Comonad w => ComonadStore s w | w -> s where
@@ -39,35 +29,19 @@ class Comonad w => ComonadStore s w | w -> s where
 
   peeks :: (s -> s) -> w a -> a
   peeks f w = peek (f (pos w)) w
-  
+
   seek :: s -> w a -> w a
   seek s = peek s . duplicate
-    
+
   seeks :: (s -> s) -> w a -> w a
   seeks f = peeks f . duplicate
 
-instance Comonad w => ComonadStore s (Strict.StoreT s w) where
-  pos = Strict.pos
-  peek = Strict.peek
-  peeks = Strict.peeks
-  seek = Strict.seek
-  seeks = Strict.seeks
-
-instance Comonad w => ComonadStore s (Lazy.StoreT s w) where
-  pos = Lazy.pos
-  peek = Lazy.peek
-  peeks = Lazy.peeks
-  seek = Lazy.seek
-  seeks = Lazy.seeks
-
-instance Comonad w => ComonadStore s (Memo.StoreT s w) where
-  pos = Memo.pos
-  peek = Memo.peek
-  peeks = Memo.peeks
-  seek = Memo.seek
-  seeks = Memo.seeks
-
--- All of these require UndecidableInstances because they do not satisfy the coverage condition
+instance Comonad w => ComonadStore s (Store.StoreT s w) where
+  pos = Store.pos
+  peek = Store.peek
+  peeks = Store.peeks
+  seek = Store.seek
+  seeks = Store.seeks
 
 lowerPos :: (ComonadTrans t, ComonadStore s w) => t w a -> s
 lowerPos = pos . lower
@@ -77,34 +51,14 @@ lowerPeek :: (ComonadTrans t, ComonadStore s w) => s -> t w a -> a
 lowerPeek s = peek s . lower
 {-# INLINE lowerPeek #-}
 
-instance ComonadStore s w => ComonadStore s (Lazy.DiscontT k w) where
-  pos = lowerPos
-  peek = lowerPeek
-
-instance ComonadStore s w => ComonadStore s (Memo.DiscontT k w) where
-  pos = lowerPos
-  peek = lowerPeek
-
-instance ComonadStore s w => ComonadStore s (Strict.DiscontT k w) where
-  pos = lowerPos
-  peek = lowerPeek
-
 instance ComonadStore s w => ComonadStore s (IdentityT w) where
   pos = lowerPos
   peek = lowerPeek
 
-instance ComonadStore s w => ComonadStore s (Lazy.EnvT e w) where
+instance ComonadStore s w => ComonadStore s (EnvT e w) where
   pos = lowerPos
   peek = lowerPeek
 
-instance ComonadStore s w => ComonadStore s (Strict.EnvT e w) where
-  pos = lowerPos
-  peek = lowerPeek
-
-instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (Simple.TracedT m w) where
-  pos = lowerPos
-  peek = lowerPeek
-
-instance (ComonadStore s w, Monoid m) => ComonadStore s (Memo.TracedT m w) where
+instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (TracedT m w) where
   pos = lowerPos
   peek = lowerPeek

@@ -8,7 +8,7 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Traced ( 
+module Control.Comonad.Traced (
   -- * ComonadTraced class
     ComonadTraced(..)
   , traces

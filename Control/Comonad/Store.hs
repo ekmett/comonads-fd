@@ -8,8 +8,22 @@
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Store ( 
-  module Control.Comonad.Store.Lazy
+module Control.Comonad.Store (
+  -- * ComonadStore class
+    ComonadStore(..)
+  -- * The Store comonad
+  , Store
+  , store
+  , runStore
+  -- * The StoreT comonad transformer
+  , StoreT(..)
+  , runStoreT
+  -- * Re-exported modules
+  , module Control.Comonad
+  , module Control.Comonad.Trans.Class
   ) where
 
-import Control.Comonad.Store.Lazy
+import Control.Comonad
+import Control.Comonad.Store.Class (ComonadStore(..))
+import Control.Comonad.Trans.Class
+import Control.Comonad.Trans.Store (Store, store, runStore, StoreT(..), runStoreT)
