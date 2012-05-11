@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       2.1.1.1
+version:       2.1.1.2
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -8,10 +8,12 @@ author:        Edward A. Kmett
 maintainer:    Edward A. Kmett <ekmett@gmail.com>
 stability:     experimental
 homepage:      http://github.com/ekmett/comonads-fd/
+bug-reports:   http://github.com/ekmett/comonads-fd/issues
 copyright:     Copyright (C) 2008-2011 Edward A. Kmett
 synopsis:      Comonad transformers using functional dependencies
 description:   Comonad transformers using functional dependencies
 build-type:    Simple
+extra-source-files: .travis.yml
 
 source-repository head
   type: git
