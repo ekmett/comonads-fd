@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       2.1.1.2
+version:       2.1.2
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -31,7 +31,7 @@ library
     mtl                  >= 2.0     && < 2.2,
     semigroups           >= 0.8.3.1 && < 0.9,
     comonad              >= 1.1.1.5 && < 1.2,
-    comonad-transformers >= 2.1.1.1 && < 2.2
+    comonad-transformers >= 2.1.2   && < 2.2
 
   exposed-modules:
     Control.Comonad.Env
