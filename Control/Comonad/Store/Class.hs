@@ -1,8 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Comonad.Store.Class
--- Copyright   :  (C) 2008-2011 Edward Kmett
+-- Copyright   :  (C) 2008-2012 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
@@ -69,7 +72,7 @@ instance ComonadStore s w => ComonadStore s (EnvT e w) where
   peek = lowerPeek
   experiment = lowerExperiment
 
-instance (ComonadStore s w, Semigroup m, Monoid m) => ComonadStore s (TracedT m w) where
+instance (ComonadStore s w, Monoid m) => ComonadStore s (TracedT m w) where
   pos = lowerPos
   peek = lowerPeek
   experiment = lowerExperiment

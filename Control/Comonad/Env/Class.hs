@@ -1,8 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Comonad.Env.Class
--- Copyright   :  (C) 2008-2011 Edward Kmett
+-- Copyright   :  (C) 2008-2012 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
@@ -45,5 +48,5 @@ instance ComonadEnv e w => ComonadEnv e (StoreT t w) where
 instance ComonadEnv e w => ComonadEnv e (IdentityT w) where
   ask = lowerAsk
 
-instance (ComonadEnv e w, Semigroup m, Monoid m) => ComonadEnv e (TracedT m w) where
+instance (ComonadEnv e w, Monoid m) => ComonadEnv e (TracedT m w) where
   ask = lowerAsk

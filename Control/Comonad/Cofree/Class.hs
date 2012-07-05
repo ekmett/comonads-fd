@@ -1,15 +1,18 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Comonad.Cofree.Class
--- Copyright   :  (C) 2008-2011 Edward Kmett
+-- Copyright   :  (C) 2008-2012 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Cofree.Class 
+module Control.Comonad.Cofree.Class
   ( ComonadCofree(..)
   ) where
 
@@ -28,7 +31,7 @@ import qualified Control.Comonad.Trans.Traced as Simple
 import qualified Control.Comonad.Trans.Traced.Memo as Memo
 import qualified Control.Comonad.Trans.Store.Memo as Memo
 import qualified Control.Comonad.Trans.Discont.Memo as Memo
-import Control.Comonad.Trans.Identity 
+import Control.Comonad.Trans.Identity
 import Data.Semigroup
 import Data.Tree
 
@@ -43,7 +46,7 @@ instance Functor f => ComonadCofree f (Cofree f) where
 
 instance ComonadCofree f w => ComonadCofree f (IdentityT w) where
   unwrap = fmap IdentityT . unwrap . runIdentityT
-  
+
 instance ComonadCofree f w => ComonadCofree f (Strict.EnvT e w) where
   unwrap (Strict.EnvT e wa) = Strict.EnvT e <$> unwrap wa
 
@@ -60,10 +63,10 @@ instance ComonadCofree f w => ComonadCofree f (Memo.StoreT s w) where
   unwrap w = flip Memo.storeT s <$> unwrap wsa
     where (wsa, s) = Memo.runStoreT w
 
-instance (ComonadCofree f w, Semigroup m, Monoid m) => ComonadCofree f (Simple.TracedT m w) where
+instance (ComonadCofree f w, Monoid m) => ComonadCofree f (Simple.TracedT m w) where
   unwrap (Simple.TracedT wma) = Simple.TracedT <$> unwrap wma
 
-instance (ComonadCofree f w, Semigroup m, Monoid m) => ComonadCofree f (Memo.TracedT m w) where
+instance (ComonadCofree f w, Monoid m) => ComonadCofree f (Memo.TracedT m w) where
   unwrap = fmap Memo.tracedT . unwrap . Memo.runTracedT
 
 instance ComonadCofree f w => ComonadCofree f (Strict.DiscontT k w) where

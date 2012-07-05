@@ -1,14 +1,14 @@
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Comonad.Cofree
--- Copyright   :  (C) 2008-2011 Edward Kmett
+-- Copyright   :  (C) 2008-2012 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
 -- Stability   :  experimental
 -- Portability :  non-portable (fundeps, MPTCs)
 ----------------------------------------------------------------------------
-module Control.Comonad.Cofree 
+module Control.Comonad.Cofree
   ( ComonadCofree(..)
   , Cofree(..)
   , coiter

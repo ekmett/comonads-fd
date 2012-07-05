@@ -1,8 +1,11 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE UndecidableInstances #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Comonad.Traced.Class
--- Copyright   :  (C) 2008-2011 Edward Kmett
+-- Copyright   :  (C) 2008-2012 Edward Kmett
 -- License     :  BSD-style (see the file LICENSE)
 --
 -- Maintainer  :  Edward Kmett <ekmett@gmail.com>
@@ -29,7 +32,7 @@ traces :: ComonadTraced m w => (a -> m) -> w a -> a
 traces f wa = trace (f (extract wa)) wa
 {-# INLINE traces #-}
 
-instance (Comonad w, Semigroup m, Monoid m) => ComonadTraced m (Traced.TracedT m w) where
+instance (Comonad w, Monoid m) => ComonadTraced m (Traced.TracedT m w) where
   trace = Traced.trace
 
 lowerTrace :: (ComonadTrans t, ComonadTraced m w) => m -> t w a -> a
