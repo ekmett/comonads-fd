@@ -1,6 +1,6 @@
 name:          comonads-fd
 category:      Control, Comonads
-version:       3.0.2
+version:       3.0.3
 license:       BSD3
 cabal-version: >= 1.6
 license-file:  LICENSE
@@ -30,9 +30,9 @@ library
     base                 >= 4       && < 5,
     transformers         >= 0.2     && < 0.4,
     mtl                  >= 2.0     && < 2.2,
-    semigroups           >= 0.8.3.1,
-    comonad              >= 3.0,
-    comonad-transformers >= 3.0
+    semigroups           >= 0.8.3.1 && < 1,
+    comonad              >= 3       && < 4,
+    comonad-transformers >= 3       && < 4
 
   exposed-modules:
     Control.Comonad.Env
