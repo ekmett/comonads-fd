@@ -1,3 +1,7 @@
+3.0.3
+-----
+* Properly annotate the package with upper bounds on its dependencies
+
 3.0.2
 -----
 * Marked modules appropriately `Trustworthy` as needed.
