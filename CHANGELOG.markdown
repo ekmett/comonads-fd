@@ -1,3 +1,7 @@
+4.0
+---
+* This package has been merged into `comonad` 4.0
+
 3.0.3
 -----
 * Properly annotate the package with upper bounds on its dependencies
